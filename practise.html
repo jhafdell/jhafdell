@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+
+<html lang="sv" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css" />
+    <title>PLU-koder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script>
+        // Activates when the website loads
+        function onload() {
+            document.getElementById("plu-c-guess-label").innerHTML = actualPLU_Code.name;
+            document.getElementById("plu-c-guess").focus();
+        }
+
+        // Returns 0-2
+        function randomNumber() {
+            return Math.floor(Math.random() * 3);
+        }
+
+        // Returns a random plu_code with name and code
+        function randomPLU_Code() {
+            return obj.plu_code[randomNumber()];
+        }
+
+        // When we want a new actualPLU_Code
+        function clear() {
+            document.getElementById("plu-c-guess").value = "";
+            actualPLU_Code = randomPLU_Code();
+            document.getElementById("plu-c-guess-label").innerHTML = actualPLU_Code.name;
+        }
+
+        // All the plu-codes :)
+        const plu_code = '{ "plu_code" : [' +
+            '{ "name":"Bananer Eko" , "code":"94232" },' +
+            '{ "name":"Bananer Fair-trade" , "code":"94011" },' +
+            '{ "name":"Frukostbröd" , "code":"2200" } ]}';
+        const obj = JSON.parse(plu_code);
+
+        // Global plu_code
+        var actualPLU_Code = randomPLU_Code();
+    </script>
+</head>
+<body onload="onload()">
+    <div class="container h-100 bg-light">
+        <div class="row">
+            <h1 style="text-align:center">PLU-Koder</h1>
+        </div>
+        <div class="row">
+            <!--
+                Menu
+            -->
+            <div class="col-sm-2">
+                <div class="container-fluid">
+                    <div class="list-group">
+                        <a href="start.html" class="list-group-item list-group-item-action">Start</a>
+                        <a href="practise.html" class="list-group-item list-group-item-action active">Träna</a>
+                        <a href="compete.html" class="list-group-item list-group-item-action">Tävla</a>
+                    </div>
+                </div>
+            </div>
+            <!--
+                Content
+            -->
+            <div class="col-sm-4">
+                <label for="plu-c-guess" class="form-label" id="plu-c-guess-label"></label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">-></span>
+                    <input type="number" class="form-control" id="plu-c-guess" placeholder="PLU-kod">
+                    <script>
+                        // When user presses a number in the field
+                        var input = document.getElementById("plu-c-guess");
+                        input.addEventListener("keyup", function () {
+                            // Checks if the input is the right code
+                            if (input.value == actualPLU_Code.code) {
+                                document.getElementById("result").innerHTML = "✅" + actualPLU_Code.name;
+                                console.log("Rätt");
+                                clear();
+                            } else if (input.value.length == actualPLU_Code.code.length) {
+                                document.getElementById("result").innerHTML = "❌" + actualPLU_Code.name + ": " + actualPLU_Code.code;
+                                console.log("Fel");
+                                clear();
+                            } else if (input.value.length > 5) {
+                                clear();
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+            <!--
+                Results
+            -->
+            <div class="col-sm-6">
+                <h4>Historik</h4>
+                <p id="result">starta dåååå</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
